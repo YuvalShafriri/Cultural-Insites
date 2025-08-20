@@ -1,0 +1,69 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor directories and files
+.vscode/
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+env/
+venv/
+.venv/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+lerna-debug.log*
+package-lock.json
+pnpm-lock.yaml
+
+# Build
+dist/
+build/
+coverage/
+coverage.*
+*.egg-info/
+.eggs/
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+
+# Database
+*.sqlite3
+*.db
+
+# Misc
+*.swp
+*~
+.idea/
+
+# Ignore secrets (add any actual secret files you use)
+secrets/
+
+# OneDrive temp files
+~$*
+
+# HTML/JS build caches
+.cache/
+
+# Keep workspace file tracked intentionally (do not ignore GTPs brain.code-workspace)
+# end of file
