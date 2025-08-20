@@ -67,3 +67,8 @@ secrets/
 
 # Keep workspace file tracked intentionally (do not ignore GTPs brain.code-workspace)
 # end of file
+
+# -----------------------------
+# Temporary: ignore top-level directories
+# This keeps the repo focused on root files for now.
+*/
