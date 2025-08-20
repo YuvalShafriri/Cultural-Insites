@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="he">
+<head><meta charset="UTF-8" /><title>Knowledge Graph</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>body, #infowindow, #infowindow *, #mynetwork, #mynetwork * { font-family: Calibri, sans-serif !important; } #mynetwork { width: 100%; height: 600px; border: 1px solid lightgray; } #infowindow { display: none; position: absolute; background: #ffffff; border: 1px solid #ccc; padding: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); direction: rtl; text-align: right; max-width: 250px; z-index: 10; } #infowindow h3 { margin-top: 0; } #closeinfo { float: left; cursor: pointer; font-weight: bold; }</style></head>
+<body><div id="mynetwork"></div><div id="infowindow"><span id="closeinfo">✖</span><h3 id="info_name"></h3><p><strong>סוג:</strong> <span id="info_type"></span></p><p><strong>משמעות:</strong> <span id="info_meaning"></span></p></div><script>
+const DATA = {
+  nodes: [
+    { id: 'sun', name: 'שמש', type: 'תופעה טבעית', heritageValue: 'ערך [מדעי]', meaning: 'מקור האור והחום של מערכת השמש, משפיע על מחזורי חיים, חקלאות ולוחות שנה' },
+    { id: 'moon', name: 'ירח', type: 'תופעה טבעית', heritageValue: 'ערך [מדעי]', meaning: 'גרם שמימי שמקיים קשר עם כדור הארץ ויוצר תופעות כמו גאות ושפל, מהווה סמל מיתי במסורות רבות' },
+    { id: 'earth', name: 'כדור הארץ', type: 'תופעה טבעית', heritageValue: 'ערך [מדעי]', meaning: 'כוכב הלכת היחיד הידוע כמקיים חיים, מרכז עולמן של תרבויות רבות' },
+    { id: 'story1', name: 'סיפור בריאת השמש והירח', type: 'סיפור', heritageValue: '', meaning: 'בסיפורי בריאה שונים מתוארת הופעתם של השמש והירח כמעשה שמיימי עם משמעות מוסרית או קוסמית' },
+    { id: 'val1', name: 'ערך מדעי', type: 'Value [מדעי]', color: 'rgba(255,193,7,0.7)', heritageValue: '', meaning: 'ערכם של גופים אלו במחקר אסטרונומי, אקלימי וגיאופיזי' },
+    { id: 'val2', name: 'ערך סמלי', type: 'Value [סמלי]', color: 'rgba(255,193,7,0.7)', heritageValue: '', meaning: 'השמש והירח מייצגים ניגודים משלימים (אור/חושך, זכר/נקבה) במסורות רבות' }
+  ],
+  edges: [
+    { from: 'sun', to: 'val1', label: 'מגלם' },
+    { from: 'moon', to: 'val1', label: 'מגלם' },
+    { from: 'earth', to: 'val1', label: 'מגלם' },
+    { from: 'sun', to: 'val2', label: 'מגלם' },
+    { from: 'moon', to: 'val2', label: 'מגלם' },
+    { from: 'story1', to: 'sun', label: 'כולל' },
+    { from: 'story1', to: 'moon', label: 'כולל' },
+    { from: 'story1', to: 'val2', label: 'מבטא ערך' }
+  ]
+};
+
+const COLOR_BY_TYPE = { 'תופעה טבעית': { background: 'rgba(30,144,255,0.7)', border: '#1E90FF' }, 'סיפור': { background: 'rgba(255,228,181,0.7)', border: '#FFE4B5' }, 'Value [מדעי]': { background: 'rgba(255,193,7,0.7)', border: '#FFC107' }, 'Value [סמלי]': { background: 'rgba(255,193,7,0.7)', border: '#FFC107' } };
+
+DATA.nodes.forEach(n => { if (!n.label) n.label = n.name; const col = COLOR_BY_TYPE[n.type] || { background: 'rgba(200,200,200,0.7)', border: '#666666' }; n.color = n.color || { background: col.background, border: col.border }; });
+const nodes = new vis.DataSet(DATA.nodes);
+const edges = new vis.DataSet(DATA.edges);
+const container = document.getElementById('mynetwork');
+const data = { nodes, edges };
+const options = { nodes: { shape: 'box', font: { align: 'center', size: 14, color: '#333333' }, borderWidth: 1, margin: { top: 8, right: 10, bottom: 8, left: 10 }, widthConstraint: { maximum: 160 } }, edges: { arrows: { to: { enabled: true, scaleFactor: 0.4 } }, font: { align: 'middle', size: 11, color: '#555555', strokeWidth: 0, background: 'white' }, smooth: { type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.5 }, color: { color: '#848484', highlight: '#333333', hover: '#555555', inherit: false } }, layout: { improvedLayout: true }, physics: { enabled: true, solver: 'repulsion', repulsion: { nodeDistance: 230, centralGravity: 0.05, springLength: 20, springConstant: 0.005, damping: 0.09 }, stabilization: { iterations: 2500, fit: true } }, interaction: { hover: true, tooltipDelay: 300000 } };
+const network = new vis.Network(container, data, options);
+network.on('click', params => { const info = document.getElementById('infowindow'); if (params.nodes.length) { const node = nodes.get(params.nodes[0]); document.getElementById('info_name').innerText = node.name; document.getElementById('info_type').innerText = node.type; document.getElementById('info_meaning').innerText = node.meaning; info.style.left = params.pointer.DOM.x + 'px'; info.style.top = params.pointer.DOM.y + 'px'; info.style.display = 'block'; } else { info.style.display = 'none'; } });
+document.getElementById('closeinfo').addEventListener('click', () => { document.getElementById('infowindow').style.display = 'none'; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('infowindow').style.display = 'none'; });
+</script></body></html>
